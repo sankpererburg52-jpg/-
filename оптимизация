@@ -1,0 +1,53 @@
+# Bad practice:
+for i in range(len(data)):
+    result = expensive_function(i)
+data_length = len(data)
+for i in range(data_length):
+    result = expensive_function(i)
+# file: fib.pyx
+cpdef int fib(int n):
+    if n <= 1:
+        return n
+    else:
+        return fib(n-1) + fib(n-2)
+squares = [i * i for i in range(10)]
+python -m cProfile myscript.py
+import cProfile
+def main():
+    pass  # ваш основной код
+
+if __name__ == "__main__":
+    profiler = cProfile.Profile()
+    profiler.enable()
+    main()
+    profiler.disable()
+    profiler.print_stats(sort="cumulative")
+pip install cython
+# file: fib.pyx
+cpdef int fib(int n):
+    if n <= 1:
+        return n
+    else:
+        return fib(n-1) + fib(n-2)
+cythonize -a -i fib.pyx
+from time import perf_counter_ns as timer
+
+start_time = timer()
+result = some_expensive_operation()
+elapsed_time = timer() - start_time
+print(f'Elapsed time: {elapsed_time / 1_000_000:.2f} ms')
+from multiprocessing import Pool
+
+with Pool(processes=4) as pool:
+    results = pool.map(some_func, data)
+with open('large_file.txt', 'rb') as f:
+    while True:
+        chunk = f.read(8192)
+        if not chunk:
+            break
+        process_chunk(chunk)
+if isinstance(x, str):
+    x = x.strip()
+else:
+    raise TypeError("Expected string")  # если заведомо строка
+x = x.strip()
