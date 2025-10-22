@@ -1,0 +1,113 @@
+import pygame
+import socket
+import threading
+
+# Настройки
+SERVER_IP = 'localhost'
+SERVER_PORT = 12345
+
+# Инициализация Pygame
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Онлайн шутер")
+
+# Основной класс игры
+class Game:
+    def __init__(self):
+        self.running = True
+
+    def run(self):
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+            # Логика игры
+            self.update()
+
+            # Отрисовка
+            self.draw()
+
+        pygame.quit()
+
+    def update(self):
+        pass  # Обновление состояния игры
+
+    def draw(self):
+        screen.fill((0, 0, 0))  # Очистка экрана
+        pygame.display.flip()  # Обновление экрана
+
+# Сетевой класс
+class Network:
+    def __init__(self):
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.connect((SERVER_IP, SERVER_PORT))
+
+    def send_data(self, data):
+        self.client.sendall(data.encode())
+
+    def receive_data(self):
+        return self.client.recv(1024).decode()
+
+# Запуск игры
+if __name__ == "__main__":
+    game = Game()
+    game_thread = threading.Thread(target=game.run)
+    game_thread.start()
+
+    network = Network()
+    # Пример отправки и получения данных
+    network.send_data("Hello, server!")
+    print(network.receive_data())
+# Основная структура игры
+class Game:
+    def __init__(self):
+        self.players = []
+        self.objects = []
+
+    def add_player(self, player):
+        self.players.append(player)
+
+    def add_object(self, game_object):
+        self.objects.append(game_object)
+
+    def move_player(self, player_id, new_position):
+        for player in self.players:
+            if player.id == player_id:
+                player.position = new_position
+                break
+
+    def interact_with_object(self, player_id, object_id):
+        for player in self.players:
+            if player.id == player_id:
+                for game_object in self.objects:
+                    if game_object.id == object_id:
+                        # Логика взаимодействия
+                        print(f"{player.name} взаимодействует с {game_object.name}")
+                        break
+
+# Пример класса игрока
+class Player:
+    def __init__(self, player_id, name, position):
+        self.id = player_id
+        self.name = name
+        self.position = position
+
+# Пример класса объекта
+class GameObject:
+    def __init__(self, object_id, name):
+        self.id = object_id
+        self.name = name
+
+# Пример использования
+if __name__ == "__main__":
+    game = Game()
+
+    player1 = Player(1, "Игрок1", (0, 0))
+    game.add_player(player1)
+
+    tree = GameObject(1, "Дерево")
+    game.add_object(tree)
+
+    game.move_player(1, (1, 1))
+    game.interact_with_object(1, 1)
